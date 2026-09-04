@@ -10,6 +10,11 @@
 
 export default {
 	async fetch(request, env, ctx) {
-		return new Response("Hello fonts!");
+		const allowed = env.ALLOWED_ORIGINS.split(",").map(origin => origin.trim());
+		const origin = request.headers.get('Origin');
+
+		const isAllowed = allowed.includes(origin) || /^http:\/\/localhost(:\d{1,5})?$/.test(origin);
+
+		return new Response(`Hello ${origin}, ${isAllowed}!`);
 	},
 };
